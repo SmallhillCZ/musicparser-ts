@@ -1,25 +1,22 @@
 import { SongPart } from "../schema";
+import { TabLine } from "./tab-line";
 
 export class Tab extends SongPart {
 
-  tab: string;
+  children: TabLine[] = [];
 
   constructor(source: string) {
     super(source);
-    this.tab = source;
+
+    this.children = source.split(/\r?\n/g).map(line => new TabLine(line));
   }
 
   getName() {
-    return `Tab (Source: ${this.source.substr(0, 20)})`;
+    return `Tab`;
   }
 
   getChildren() {
-    return [];
-  }
-
-  transpose(difference: number) {
-    super.transpose(difference);
-    this.tab = this.tab.replace(/\d+/g, match => String(((((Number(match) + difference) % 12) + 12) % 12)));
+    return this.children;
   }
 
 }

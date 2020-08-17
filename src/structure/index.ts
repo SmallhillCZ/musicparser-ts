@@ -8,3 +8,5 @@ export * from "./tab";
 export * from "./text";
 export * from "./textpart";
 export * from "./verse";
+export * from "./tab-line";
+export * from "./text-line";

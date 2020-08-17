@@ -28,7 +28,7 @@ export class Verse extends SongPart {
   }
 
   getName() {
-    return "Verse";
+    return this.isChorus ? `Chorus (${this.label || ""}${this.separator || ""})` : `Verse (${this.label || ""}${this.separator || ""})`;
   }
 
   getChildren() {

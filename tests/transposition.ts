@@ -1,25 +1,18 @@
-import { Chord, Song, Diagram, Tab, DebugExporter, Text } from "../src"
-import { DEFAULT_ENCODING } from "crypto";
+import { Chord, Song, Diagram, TabLine } from "..";
+import { testSong } from "./assets/song";
 
 describe("Transposition of song tune and individual chords.", () => {
 
   test("Song transposition by difference", () => {
 
-    const song = new Song(`[C]
-    -->
-    3. Third [D]verse...
-    
-    [[C x32010]]
-    
-    e|---1--2--
-    `);
+    const song = new Song(testSong);
 
     song.transpose(2);
 
-    const chords = (<Chord[]>song.getAllChildren().filter(child => child instanceof Chord)).map(chord => chord.chord);
+    const chords = song.getAllChildren().filter((child): child is Chord => child instanceof Chord).map(chord => chord.chord);
 
-    const diagram = <Diagram>song.getAllChildren().filter(child => child instanceof Diagram)[0];
-    const tab = <Tab>song.getAllChildren().filter(child => child instanceof Tab)[0];
+    const diagram = song.getAllChildren().filter((child): child is Diagram => child instanceof Diagram)[0];
+    const tab = song.getAllChildren().filter((child): child is TabLine => child instanceof TabLine)[0];
 
     expect(chords).toEqual(["D", "E"]);
 
@@ -56,10 +49,10 @@ describe("Transposition of song tune and individual chords.", () => {
 
     song.setTune("D");
 
-    const chords = (<Chord[]>song.getAllChildren().filter(child => child instanceof Chord)).map(chord => chord.chord);
+    const chords = song.getAllChildren().filter((child): child is Chord => child instanceof Chord).map(chord => chord.chord);
 
-    const diagram = <Diagram>song.getAllChildren().filter(child => child instanceof Diagram)[0];
-    const tab = <Tab>song.getAllChildren().filter(child => child instanceof Tab)[0];
+    const diagram = song.getAllChildren().filter((child): child is Diagram => child instanceof Diagram)[0];
+    const tab = song.getAllChildren().filter((child): child is TabLine => child instanceof TabLine)[0];
 
     expect(chords).toEqual(["D", "E"]);
 

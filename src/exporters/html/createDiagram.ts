@@ -27,22 +27,21 @@ export function createDiagram(chord: string, code: (number | null)[]): string {
     }
   }
 
-  let output = `
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="${height}px" width="${width}px" viewBox="0 0 160 190">
+  let output = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="${height}px" width="${width}px" viewBox="0 0 160 190">
 
-      <!-- structure -->
-      <line x1="8" y1="70" x2="112" y2="70" style="stroke:black;stroke-width:${capo ? 4 : 8}" />
+  <!-- structure -->
+  <line x1="8" y1="70" x2="112" y2="70" style="stroke:black;stroke-width:${capo ? 4 : 8}" />
 
-      <line x1="10" y1="70" x2="10" y2="190" style="stroke:black;stroke-width:4" />
-      <line x1="30" y1="70" x2="30" y2="190" style="stroke:black;stroke-width:4" />
-      <line x1="50" y1="70" x2="50" y2="190" style="stroke:black;stroke-width:4" />
-      <line x1="70" y1="70" x2="70" y2="190" style="stroke:black;stroke-width:4" />
-      <line x1="90" y1="70" x2="90" y2="190" style="stroke:black;stroke-width:4" />
-      <line x1="110" y1="70" x2="110" y2="190" style="stroke:black;stroke-width:4" />
+  <line x1="10" y1="70" x2="10" y2="190" style="stroke:black;stroke-width:4" />
+  <line x1="30" y1="70" x2="30" y2="190" style="stroke:black;stroke-width:4" />
+  <line x1="50" y1="70" x2="50" y2="190" style="stroke:black;stroke-width:4" />
+  <line x1="70" y1="70" x2="70" y2="190" style="stroke:black;stroke-width:4" />
+  <line x1="90" y1="70" x2="90" y2="190" style="stroke:black;stroke-width:4" />
+  <line x1="110" y1="70" x2="110" y2="190" style="stroke:black;stroke-width:4" />
 
-      <line x1="10" y1="100" x2="110" y2="100" style="stroke:black;stroke-width:4" />
-      <line x1="10" y1="130" x2="110" y2="130" style="stroke:black;stroke-width:4" />
-      <line x1="10" y1="160" x2="110" y2="160" style="stroke:black;stroke-width:4" />
+  <line x1="10" y1="100" x2="110" y2="100" style="stroke:black;stroke-width:4" />
+  <line x1="10" y1="130" x2="110" y2="130" style="stroke:black;stroke-width:4" />
+  <line x1="10" y1="160" x2="110" y2="160" style="stroke:black;stroke-width:4" />
   `;
 
   if (capo) output += `<text x="120" y="97" fill="black" font-size="40" font-family="Calibri,sans-serif"> ${capo} </text>`;

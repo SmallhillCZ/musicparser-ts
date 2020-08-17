@@ -9,16 +9,18 @@ export class Column extends SongPart {
 
   constructor(source: string) {
     super(source);
-    const sourceParts = source.trim().split(this.re_verse);
 
-    this.verses = this.createVerses(sourceParts);
+    this.verses = this.createVerses(source);
   }
 
-  createVerses(sourceParts: string[]): Verse[] {
+  createVerses(source: string): Verse[] {
+
+    const sourceParts = source.split(this.re_verse);
+
     const verses: Verse[] = [];
 
     if (sourceParts.length) {
-      const source = <string>sourceParts.shift(); // cannot be undefined is length > 0
+      const source = sourceParts.shift()!; // cannot be undefined is length > 0
       if (source.trim().length > 0) verses.push(new Verse(source, null, null));
     }
 

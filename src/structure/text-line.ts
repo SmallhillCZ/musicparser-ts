@@ -47,7 +47,7 @@ export class TextLine extends SongPart {
   }
 
   getName() {
-    return `Text Line (Source: ${this.source.substr(0, 20)})`;
+    return `Text Line`;
   }
 
   getChildren() {

@@ -1,14 +1,17 @@
 import { SongPart } from "../schema";
-import { ChordGroup } from "./chordgroup";
-import { TextPart } from "./textpart";
+import { ChordLine } from "./chord-line";
+import { TextPart } from "./text-part";
 import { Diagram } from "./diagram";
 
 export class TextLine extends SongPart {
 
+  re_right = /^\-{2,}>/;
   re_chord = /\[[^\[\]\n]+?\]/;
   re_diagram = /\[\[[^ ]+ (?:[\dx]{6}|(?:\d\d|xx){6})\]\]/;
 
-  children: (TextPart | ChordGroup | Diagram)[] = [];
+  right = false;
+
+  children: (TextPart | ChordLine | Diagram)[] = [];
 
   constructor(source: string) {
     super(source);
@@ -16,9 +19,14 @@ export class TextLine extends SongPart {
     this.children = this.parseText(source);
   }
 
-  parseText(source: string): (TextPart | ChordGroup | Diagram)[] {
+  parseText(source: string): (TextPart | ChordLine | Diagram)[] {
 
-    const children: (TextPart | ChordGroup | Diagram)[] = [];
+    const children: (TextPart | ChordLine | Diagram)[] = [];
+
+    if (this.re_right.test(source)) {
+      this.right = true;
+      source = source.replace(this.re_right, "");
+    }
 
     const regexps = [this.re_chord, this.re_diagram];
     const regexpMerged = new RegExp(`(?:${regexps.map(reg => `(${reg.source})`).join("|")})`, "gm");
@@ -34,7 +42,7 @@ export class TextLine extends SongPart {
       if (preText) children.push(new TextPart(preText));
 
       // current token
-      if (chord) children.push(new ChordGroup(partSource));
+      if (chord) children.push(new ChordLine(partSource));
       if (diagram) children.push(new Diagram(partSource));
 
       lastIndex = match.index + partSource.length;

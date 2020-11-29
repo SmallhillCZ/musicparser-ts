@@ -6,7 +6,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "prepublish": "tsc && npm run test"
+    "build": "tsc",
+    "dev": "tsc -w",
+    "prepublishOnly": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",

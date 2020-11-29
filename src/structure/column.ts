@@ -3,7 +3,7 @@ import { Verse } from "./verse";
 
 export class Column extends SongPart {
 
-  re_verse = /^(?:(?:(\d+|#)(\.)|(\w+)(\:))(?:\n|))/m;
+  re_verse = /^(?:(?:(\d+|#)(\.)|(\S+)(\:))(?:\n|))/m;
 
   verses: Verse[];
 

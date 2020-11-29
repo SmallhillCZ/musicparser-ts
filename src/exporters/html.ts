@@ -1,7 +1,9 @@
 import { Exporter, SongPart } from "../schema";
 
 import { createDiagram } from "./html/createDiagram";
-import { Song, Section, Column, Verse, Tab, Text, TextPart, ChordGroup, Diagram, Chord, TabLine, TextLine } from "../structure";
+import { Song, Section, Column, Verse, Tab, Text, TextPart, ChordLine, Diagram, Chord, TabLine, TextLine } from "../structure";
+import { ETXTBSY } from "constants";
+import { VerseContent } from "../structure/verse-content";
 
 export class HtmlExporter implements Exporter {
 
@@ -10,7 +12,7 @@ export class HtmlExporter implements Exporter {
   constructor(customDocument?: Document) {
     if (customDocument) this.document = customDocument;
     else if (window?.document) this.document = window?.document;
-    else throw new Error("DOM document is must be either present in window namespace or provided in HtmlExporter constructor");
+    else throw new Error("DOM document must be either present in window namespace or provided in HtmlExporter constructor");
   }
 
   export(part: SongPart): HTMLElement {
@@ -18,11 +20,12 @@ export class HtmlExporter implements Exporter {
     else if (part instanceof Section) return this.exportSection(part);
     else if (part instanceof Column) return this.exportColumn(part);
     else if (part instanceof Verse) return this.exportVerse(part);
+    else if (part instanceof VerseContent) return this.exportVerseContent(part);
     else if (part instanceof Tab) return this.exportTab(part);
     else if (part instanceof TabLine) return this.exportTabLine(part);
     else if (part instanceof Text) return this.exportText(part);
     else if (part instanceof TextLine) return this.exportTextLine(part);
-    else if (part instanceof ChordGroup) return this.exportChordGroup(part);
+    else if (part instanceof ChordLine) return this.exportChordLine(part);
     else if (part instanceof Diagram) return this.exportDiagram(part);
     else if (part instanceof Chord) return this.exportChord(part);
     else if (part instanceof TextPart) return this.exportTextPart(part);
@@ -64,10 +67,20 @@ export class HtmlExporter implements Exporter {
       el.appendChild(label);
     }
 
-    verse.getChildren().forEach(child => {
+    verse.getChildren().forEach(child => el.appendChild(this.exportVerseContent(child)));
+
+    return el;
+  }
+
+  private exportVerseContent(content: VerseContent) {
+    const el = this.document.createElement("div");
+    el.classList.add("content");
+
+    content.getChildren().forEach(child => {
       if (child instanceof Tab) el.appendChild(this.exportTab(child));
       else if (child instanceof Text) el.appendChild(this.exportText(child));
     });
+
     return el;
   }
 
@@ -98,8 +111,16 @@ export class HtmlExporter implements Exporter {
     const el = this.document.createElement("div");
     el.classList.add("text-line");
 
+    if (text.right) el.classList.add("right");
+
+    const chordCount = text.getChildren().filter(item => item instanceof ChordLine).length;
+    if (chordCount > 0) el.classList.add("has-chords");
+
+    const textCound = text.getChildren().filter(item => item instanceof TextPart).length;
+    if (textCound > 0) el.classList.add("has-text");
+
     text.getChildren().forEach(child => {
-      if (child instanceof ChordGroup) el.appendChild(this.exportChordGroup(child));
+      if (child instanceof ChordLine) el.appendChild(this.exportChordLine(child));
       else if (child instanceof Diagram) el.appendChild(this.exportDiagram(child));
       else if (child instanceof TextPart) el.appendChild(this.exportTextPart(child));
     });
@@ -114,14 +135,23 @@ export class HtmlExporter implements Exporter {
     return el;
   }
 
-  private exportChordGroup(chordgroup: ChordGroup) {
+  private exportChordLine(chordgroup: ChordLine) {
+    const containerEl = this.document.createElement("span");
+    containerEl.classList.add("chord-container");
+
     const el = this.document.createElement("span");
-    el.classList.add("chordgroup");
+    el.classList.add("chord-line");
     if (chordgroup.separator) el.classList.add("separated");
 
-    chordgroup.getChildren().forEach(chord => el.appendChild(this.exportChord(chord)));
+    containerEl.appendChild(el);
 
-    return el;
+    chordgroup.getChildren().forEach(child => {
+      if (child instanceof Chord) el.appendChild(this.exportChord(child));
+      else if (child instanceof TextPart) el.appendChild(this.exportTextPart(child));
+    });
+
+
+    return containerEl;
   }
 
   private exportDiagram(diagram: Diagram) {
@@ -142,7 +172,7 @@ export class HtmlExporter implements Exporter {
     return el;
   }
 
-  exportOther(part: SongPart) {
+  private exportOther(part: SongPart) {
     const el = this.document.createElement("span");
     el.textContent = part.source;
     return el;

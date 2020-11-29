@@ -10,9 +10,7 @@ export class Chord extends SongPart {
 
   constructor(source: string) {
     super(source);
-
     this.chord = normalizeChord(source);
-
   }
 
   getTone() {

@@ -1,28 +1,20 @@
 import { SongPart } from "../schema/songpart";
-import { Tab } from "./tab";
-import { Text } from "./text";
+import { VerseContent } from "./verse-content";
 
 export class Verse extends SongPart {
 
-  re_tab = /^[a-hA-H ]?\|/;
-  re_chorus = /(^r$|^ref|^chorus)/i;
+  private re_chorus = /(^r$|^ref|^chorus|^®)/i;
+  private re_autolabel = /#/;
 
-  children: (Text | Tab)[];
+  public content: VerseContent;
 
-  isChorus: boolean;
+  public isChorus: boolean;
 
   constructor(source: string, public label: string | null, public separator: string | null) {
 
     super(source);
 
-    this.children = this.source
-      .split(/\n\s*\n/)
-      .map(blockSource => blockSource.trim())
-      .filter(blockSource => blockSource.length > 0)
-      .map(blockSource => {
-        if (blockSource.match(this.re_tab)) return new Tab(blockSource);
-        else return new Text(blockSource);
-      })
+    this.content = new VerseContent(source);
 
     this.isChorus = label ? this.re_chorus.test(label) : false;
   }
@@ -32,6 +24,16 @@ export class Verse extends SongPart {
   }
 
   getChildren() {
-    return this.children;
+    return [this.content];
   }
+
+  autoNumber(i: number): number {
+
+    if (this.label && this.re_autolabel.test(this.label)) {
+      i++;
+      this.label = this.label.replace(this.re_autolabel, String(i));
+    }
+    return i;
+  }
+
 }

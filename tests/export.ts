@@ -13,27 +13,30 @@ describe("Exports of song", () => {
   - Section
     - Column
       - Verse ()
-        - Text
-          - Text Line
-            - ChordGroup
-              - Chord (Chord: C, Tone: C)
+        - VerseContent
+          - Text
+            - Text Line
+              - ChordGroup
+                - Chord (Chord: C, Tone: C)
     - Column
       - Verse (3.)
-        - Text
-          - Text Line
-            - TextPart (Source: Third )
-            - ChordGroup
-              - Chord (Chord: D, Tone: D)
-            - TextPart (Source: verse...)
+        - VerseContent
+          - Text
+            - Text Line
+              - TextPart (Source: Third )
+              - ChordGroup
+                - Chord (Chord: D, Tone: D)
+              - TextPart (Source: verse...)
       - Chorus (R:)
-        - Text
-          - Text Line
-            - TextPart (Source: Chorussssssss...)
-        - Text
-          - Text Line
-            - Diagram (Chord: C, Code: x32010)
-        - Tab
-          - Tab Line (Source: e|---1--2--)`);
+        - VerseContent
+          - Text
+            - Text Line
+              - TextPart (Source: Chorussssssss...)
+          - Text
+            - Text Line
+              - Diagram (Chord: C, Code: x32010)
+          - Tab
+            - Tab Line (Source: e|---1--2--)`);
   });
 
   test("HTML", () => {

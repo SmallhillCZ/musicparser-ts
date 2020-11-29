@@ -28,7 +28,7 @@ export class HtmlExporter implements Exporter {
     else if (part instanceof ChordLine) return this.exportChordLine(part);
     else if (part instanceof Diagram) return this.exportDiagram(part);
     else if (part instanceof Chord) return this.exportChord(part);
-    else if (part instanceof TextPart) return this.exportTextPart(part);
+    // else if (part instanceof TextPart) return this.exportTextPart(part); // globalThis.Text is a private property wont compile
     else return this.exportOther(part);
   }
 
@@ -129,10 +129,7 @@ export class HtmlExporter implements Exporter {
   }
 
   private exportTextPart(textpart: TextPart) {
-    const el = this.document.createElement("span");
-    el.classList.add("text-part");
-    el.textContent = textpart.source;
-    return el;
+    return this.document.createTextNode(textpart.source);
   }
 
   private exportChordLine(chordgroup: ChordLine) {

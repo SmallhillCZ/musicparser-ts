@@ -3,8 +3,11 @@ import { VerseContent } from "./verse-content";
 
 export class Verse extends SongPart {
 
+  re_right = /^\-{2,}>/;
   private re_chorus = /(^r$|^ref|^chorus|^®)/i;
   private re_autolabel = /#/;
+
+  public right = false;
 
   public content: VerseContent;
 
@@ -13,6 +16,11 @@ export class Verse extends SongPart {
   constructor(source: string, public label: string | null, public separator: string | null) {
 
     super(source);
+
+    if (this.re_right.test(source)) {
+      this.right = true;
+      source = source.replace(this.re_right, "");
+    }
 
     this.content = new VerseContent(source);
 

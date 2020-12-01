@@ -5,11 +5,8 @@ import { Diagram } from "./diagram";
 
 export class TextLine extends SongPart {
 
-  re_right = /^\-{2,}>/;
   re_chord = /\[[^\[\]\n]+?\]/;
   re_diagram = /\[\[[^ ]+ (?:[\dx]{6}|(?:\d\d|xx){6})\]\]/;
-
-  right = false;
 
   children: (TextPart | ChordLine | Diagram)[] = [];
 
@@ -22,11 +19,6 @@ export class TextLine extends SongPart {
   parseText(source: string): (TextPart | ChordLine | Diagram)[] {
 
     const children: (TextPart | ChordLine | Diagram)[] = [];
-
-    if (this.re_right.test(source)) {
-      this.right = true;
-      source = source.replace(this.re_right, "");
-    }
 
     const regexps = [this.re_chord, this.re_diagram];
     const regexpMerged = new RegExp(`(?:${regexps.map(reg => `(${reg.source})`).join("|")})`, "gm");

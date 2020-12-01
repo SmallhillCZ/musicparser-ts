@@ -58,7 +58,9 @@ export class HtmlExporter implements Exporter {
   private exportVerse(verse: Verse) {
     const el = this.document.createElement("div");
     el.classList.add("verse");
+    
     if (verse.isChorus) el.classList.add("chorus");
+    if (verse.right) el.classList.add("right");
 
     if (verse.label) {
       const label = this.document.createElement("div");
@@ -110,8 +112,6 @@ export class HtmlExporter implements Exporter {
   private exportTextLine(text: TextLine) {
     const el = this.document.createElement("div");
     el.classList.add("text-line");
-
-    if (text.right) el.classList.add("right");
 
     const chordCount = text.getChildren().filter(item => item instanceof ChordLine).length;
     if (chordCount > 0) el.classList.add("has-chords");

@@ -5,7 +5,7 @@ import { tone2index, index2tone } from "../util/transpose";
 
 export class Song extends SongPart {
 
-  re_section = /\n\-{3,}\n/;
+  re_section = /\n<\-{2,}>\s*\n/;
 
   sections: Section[];
 

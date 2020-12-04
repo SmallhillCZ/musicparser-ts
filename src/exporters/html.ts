@@ -58,7 +58,7 @@ export class HtmlExporter implements Exporter {
   private exportVerse(verse: Verse) {
     const el = this.document.createElement("div");
     el.classList.add("verse");
-    
+
     if (verse.isChorus) el.classList.add("chorus");
     if (verse.right) el.classList.add("right");
 
@@ -113,42 +113,63 @@ export class HtmlExporter implements Exporter {
     const el = this.document.createElement("div");
     el.classList.add("text-line");
 
-    const chordCount = text.getChildren().filter(item => item instanceof ChordLine).length;
-    if (chordCount > 0) el.classList.add("has-chords");
+    const hasChords = text.getChildren().filter(item => item instanceof ChordLine).length > 0;
+    if (hasChords) el.classList.add("has-chords");
 
-    const textCound = text.getChildren().filter(item => item instanceof TextPart).length;
-    if (textCound > 0) el.classList.add("has-text");
+    const hasText = text.getChildren().filter(item => item instanceof TextPart).length > 0;
+    if (hasText) el.classList.add("has-text");
 
-    text.getChildren().forEach(child => {
-      if (child instanceof ChordLine) el.appendChild(this.exportChordLine(child));
+    const children = text.getChildren().slice();
+    let child: SongPart | undefined;
+
+    while (child = children.shift()) {
+
+      if (child instanceof ChordLine) {
+        if (hasText) el.appendChild(this.createLinePart(child, !child.separator && children[0] instanceof TextPart ? <TextPart>children.shift() : undefined));
+        else el.appendChild(this.exportChordLine(child));
+      }
+
+      else if (child instanceof TextPart) {
+        if (hasChords) el.appendChild(this.createLinePart(undefined, child));
+        else el.appendChild(this.exportTextPart(child));
+      }
+
       else if (child instanceof Diagram) el.appendChild(this.exportDiagram(child));
-      else if (child instanceof TextPart) el.appendChild(this.exportTextPart(child));
-    });
+    }
 
     return el;
   }
 
+  private createLinePart(chordLine?: ChordLine, textPart?: TextPart) {
+    const groupEl = this.document.createElement("span");
+    groupEl.classList.add("line-part");
+    groupEl.style.display = "inline-block";
+    groupEl.appendChild(chordLine ? this.exportChordLine(chordLine) : this.document.createTextNode("\u00A0"));
+    groupEl.appendChild(this.document.createElement("br"));
+    groupEl.appendChild(textPart ? this.exportTextPart(textPart) : this.document.createTextNode("\u00A0"));
+    return groupEl;
+  }
+
   private exportTextPart(textpart: TextPart) {
-    return this.document.createTextNode(textpart.source);
+    const el = this.document.createElement("span");
+    el.classList.add("text-part");
+    el.textContent = textpart.source;
+    return el;
   }
 
   private exportChordLine(chordgroup: ChordLine) {
-    const containerEl = this.document.createElement("span");
-    containerEl.classList.add("chord-container");
-
     const el = this.document.createElement("span");
     el.classList.add("chord-line");
     if (chordgroup.separator) el.classList.add("separated");
-
-    containerEl.appendChild(el);
 
     chordgroup.getChildren().forEach(child => {
       if (child instanceof Chord) el.appendChild(this.exportChord(child));
       else if (child instanceof TextPart) el.appendChild(this.exportTextPart(child));
     });
 
+    el.appendChild(this.document.createTextNode("\u00A0"));
 
-    return containerEl;
+    return el;
   }
 
   private exportDiagram(diagram: Diagram) {

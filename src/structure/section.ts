@@ -3,7 +3,7 @@ import { Column } from "./column";
 
 export class Section extends SongPart {
 
-  re_column = /\n *\-{2,}> *\n/m;
+  re_column = /\n\s*\-{2,}>\s*\n/m;
 
   columns: Column[];
 

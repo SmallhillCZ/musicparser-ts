@@ -20,3 +20,11 @@ export function tone2index(tone: string): number | undefined {
   return chordIndex;
 
 }
+
+export function transposeTone(oldTone: string, difference: number): string {
+  
+  const oldIndex = tone2index(oldTone);
+  if (oldIndex === undefined) return oldTone;
+
+  return index2tone(oldIndex + difference);
+}

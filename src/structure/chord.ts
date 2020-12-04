@@ -1,10 +1,11 @@
 import { SongPart } from "../schema";
-import { tone2index, index2tone } from "../util/transpose";
+import { tone2index, index2tone, transposeTone } from "../util/transpose";
 import { normalizeChord } from "../util/normalize-chord";
 
 export class Chord extends SongPart {
 
   re_tone = /^[A-H][♯♭]?/i;
+  re_bass_tone = /(?<=\/)[A-H][♯♭]?/i;
 
   chord: string;
 
@@ -15,7 +16,6 @@ export class Chord extends SongPart {
 
   getTone() {
     const matches = this.chord.match(this.re_tone);
-
     return matches ? matches[0] : null;
   }
 
@@ -23,20 +23,24 @@ export class Chord extends SongPart {
     this.chord = this.chord.replace(this.re_tone, newTone);
   }
 
+  getBassTone() {
+    const matches = this.chord.match(this.re_bass_tone);
+    return matches ? matches[0] : null;
+  }
+  setBassTone(newTone: string) {
+    this.chord = this.chord.replace(this.re_bass_tone, newTone);
+  }
+
   transpose(difference: number) {
 
     super.transpose(difference);
 
-    const oldTone = this.getTone();
-    if (oldTone === null) return;
+    const tone = this.getTone();
+    if (tone) this.setTone(transposeTone(tone, difference));
 
-    const oldIndex = tone2index(oldTone);
-    if (oldIndex === undefined) return;
+    const bassTone = this.getBassTone();
+    if (bassTone) this.setBassTone(transposeTone(bassTone, difference));
 
-    const newTone = index2tone(oldIndex + difference);
-
-    this.setTone(newTone);
-    
   }
 
   getName() {

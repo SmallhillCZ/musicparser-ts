@@ -14,6 +14,8 @@ export class ChordLine extends SongPart {
   constructor(source: string) {
     super(source);
 
+    source = source.replace(/,/g, " ");
+
     const contentMatch = this.re_chords.exec(source);
 
     if (contentMatch) {

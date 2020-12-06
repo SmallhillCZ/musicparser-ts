@@ -1,7 +1,9 @@
+import "jest";
+
 import { Chord, Song, Diagram, TabLine } from "..";
 import { testSong } from "./assets/song";
 
-describe("Transposition of song tune and individual chords.", () => {
+describe("Transposition", () => {
 
   test("Song transposition by difference", () => {
 

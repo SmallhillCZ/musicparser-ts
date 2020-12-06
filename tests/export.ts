@@ -1,8 +1,9 @@
-import { Chord, Song, HtmlExporter, DebugExporter } from "..";
-import { testSong, testSongHTML } from "./assets/song";
-import { hasUncaughtExceptionCaptureCallback } from "process";
+import "jest";
 
-describe("Exports of song", () => {
+import { Song, HtmlExporter, DebugExporter } from "..";
+import { testSong, testSongHTML } from "./assets/song";
+
+describe("Exports", () => {
 
   const song = new Song(testSong);
 

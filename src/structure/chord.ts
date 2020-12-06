@@ -1,3 +1,5 @@
+import "jest";
+
 import { SongPart } from "../schema";
 import { tone2index, index2tone, transposeTone } from "../util/transpose";
 import { normalizeChord } from "../util/normalize-chord";
@@ -5,7 +7,7 @@ import { normalizeChord } from "../util/normalize-chord";
 export class Chord extends SongPart {
 
   re_tone = /^[A-H][♯♭]?/i;
-  re_bass_tone = /(?<=\/)[A-H][♯♭]?/i;
+  re_bass_tone = /(\/)([A-H][♯♭]?)/i;
 
   chord: string;
 
@@ -25,10 +27,11 @@ export class Chord extends SongPart {
 
   getBassTone() {
     const matches = this.chord.match(this.re_bass_tone);
-    return matches ? matches[0] : null;
+    return matches ? matches[2] : null;
   }
+
   setBassTone(newTone: string) {
-    this.chord = this.chord.replace(this.re_bass_tone, newTone);
+    this.chord = this.chord.replace(this.re_bass_tone, `$1${newTone}`);
   }
 
   transpose(difference: number) {

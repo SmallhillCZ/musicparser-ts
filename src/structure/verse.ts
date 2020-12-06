@@ -3,8 +3,8 @@ import { VerseContent } from "./verse-content";
 
 export class Verse extends SongPart {
 
-  re_right = /^\-{2,}>/;
-  private re_chorus = /(^r$|^ref|^chorus|^®)/i;
+  private re_right = /^\-{2,}>/;
+  private re_chorus = /(^r$|^rf|^ref|^chorus|^®)/i;
   private re_autolabel = /#/;
 
   public right = false;

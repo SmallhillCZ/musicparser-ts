@@ -1,5 +1,3 @@
-import "jest";
-
 import { SongPart } from "../schema";
 import { tone2index, index2tone, transposeTone } from "../util/transpose";
 import { normalizeChord } from "../util/normalize-chord";
